@@ -9,7 +9,7 @@ SCRIPT_DIR = str(Path().parent)
 
 @click.command()
 @click.option("--input-video-path", "-i", type=str, default=f"{SCRIPT_DIR}/movie.mp4")
-@click.option("--config-yaml-path", "-t", type=str, default=f"{SCRIPT_DIR}/config/cam0.yml")
+@click.option("--config-yaml-path", "-c", type=str, default=f"{SCRIPT_DIR}/config/cam0.yml")
 @click.option("--output-video-name", "-o", type=str, default="movie_undist.mp4")
 @click.option("--frame-rate", "-f", type=int, default=30)
 def main(input_video_path, config_yaml_path, output_video_name, frame_rate):
