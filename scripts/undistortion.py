@@ -11,13 +11,19 @@ def load_yaml(file_path):
 
 
 class Undistortion:
-    def __init__(self, config_file_path):
+    def __init__(self, config_file_path, use_fisheye_model=False):
         camera_param_dict = load_yaml(config_file_path)
+        self._use_fisheye_model = use_fisheye_model
 
+        self._use_fisheye_model = use_fisheye_model
         self._image_size = (camera_param_dict["image_width"], camera_param_dict["image_height"])
         self._K = np.asarray(camera_param_dict["camera_matrix"]["data"], dtype=float).reshape(3, 3)
         self._D = np.asarray(camera_param_dict["distortion_coefficients"]["data"], dtype=float)
-        self._map_x, self._map_y = cv2.initUndistortRectifyMap(self._K, self._D, None, self._K, self._image_size, cv2.CV_16SC2)
+
+        if self._use_fisheye_model:
+            self._map_x, self._map_y = cv2.fisheye.initUndistortRectifyMap(self._K, self._D, np.eye(3), self._K, self._image_size, cv2.CV_16SC2)
+        else:
+            self._map_x, self._map_y = cv2.initUndistortRectifyMap(self._K, self._D, None, self._K, self._image_size, cv2.CV_16SC2)
 
     def correction(self, image):
         image_undistorted = cv2.remap(image, self._map_x, self._map_y, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
@@ -34,3 +40,7 @@ class Undistortion:
     @property
     def D(self):
         return self._D
+
+    @property
+    def is_fisheye_mode(self):
+        return self._use_fisheye_model
