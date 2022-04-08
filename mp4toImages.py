@@ -14,7 +14,7 @@ from scripts.utils import make_output_dir
 @click.option("--subsample-rate", "-sub", default=1.0)
 def main(input_mp4_path, output_dir, viewer_mode, resize_rate, subsample_rate):
     output_dir_path = Path(output_dir)
-    make_output_dir(output_dir_path, clean=True)
+    make_output_dir(output_dir_path)
     cap = cv2.VideoCapture(input_mp4_path)
 
     n_flames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
